@@ -41,7 +41,6 @@ export default {
     isObject() { return typeof this.nodeData === 'object' && this.nodeData !== null && !Array.isArray(this.nodeData); },
     isArray() { return Array.isArray(this.nodeData); },
     isRef() {
-      // ESLint 규칙을 준수하는 안전한 방식으로 수정
       return this.isObject && Object.prototype.hasOwnProperty.call(this.nodeData, '_ref');
     },
     isBoolean() { return typeof this.nodeData === 'boolean'; },

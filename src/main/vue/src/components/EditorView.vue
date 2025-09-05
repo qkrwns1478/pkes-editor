@@ -46,19 +46,37 @@ export default {
     }
   },
   methods: {
-    handleSave() {
+    async handleSave() {
       if (!this.saveData) {
         alert("There's no data to modify.");
         return;
       }
-      const dataStr = JSON.stringify(this.saveData, null, 2);
-      const blob = new Blob([dataStr], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = "edited_save.json";
-      link.click();
-      URL.revokeObjectURL(url);
+      try {
+        const response = await fetch('/api/download', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(this.saveData)
+        });
+
+        if (!response.ok) {
+          throw new Error(`Server error: ${response.statusText}`);
+        }
+
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = "edited_save.rxdata";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error('Download failed:', error);
+        alert('Failed to download the .rxdata file. Please check the console for more details.');
+      }
     }
   }
 }
