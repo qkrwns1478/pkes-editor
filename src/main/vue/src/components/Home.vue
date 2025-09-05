@@ -69,12 +69,11 @@
 
 <script>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 
 export default {
   name: 'HomePage',
-  setup() {
-    const router = useRouter()
+  emits: ['upload-success'],
+  setup(props, context) {
     const fileInput = ref(null)
     const isDragOver = ref(false)
     const isUploading = ref(false)
@@ -162,13 +161,16 @@ export default {
           body: formData
         })
 
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Server responded with ${response.status}: ${errorText}`);
+        }
+
         const result = await response.json()
-
-        sessionStorage.setItem('saveData', JSON.stringify(result.data))
-        sessionStorage.setItem('fileId', result.fileId)
-
-        router.push('/editor')
+        sessionStorage.setItem('saveData', JSON.stringify(result))
+        context.emit('upload-success');
       } catch (error) {
+        console.error('Upload failed details:', error);
         throw new Error('Upload failed')
       }
     }

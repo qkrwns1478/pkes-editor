@@ -1,28 +1,35 @@
 <template>
-  <Home />
+  <component :is="currentView" @upload-success="navigateToEditor"></component>
 </template>
 
 <script>
-import Home from './components/Home.vue'
+import Home from './components/Home.vue';
+import EditorView from './components/EditorView.vue';
 
 export default {
   name: 'App',
   components: {
-    Home
+    Home,
+    EditorView
+  },
+  data() {
+    return {
+      currentView: 'Home'
+    };
+  },
+  methods: {
+    navigateToEditor() {
+      this.currentView = 'EditorView';
+    }
   }
 }
 </script>
 
 <style>
-#app {
+body {
+  margin: 0;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-body {
-  margin: 0px;
 }
 </style>
