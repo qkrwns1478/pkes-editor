@@ -24,7 +24,6 @@ public class DownloadController {
 
     @PostMapping("/download")
     public ResponseEntity<byte[]> handleRxdataDownload(@RequestBody Map<String, Object> jsonDataWrapper) {
-        // 래퍼 객체가 비어있거나 내부에 'data' 키가 없으면 오류를 반환합니다.
         if (jsonDataWrapper == null || !jsonDataWrapper.containsKey("data")) {
             return ResponseEntity.badRequest().build();
         }
